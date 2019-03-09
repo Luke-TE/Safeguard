@@ -6,9 +6,9 @@ namespace healthHack
     public interface IModelInterface
     {
         void Update();
-        bool AddVacine();
+        bool setVaccine(float proportion);
         bool AddAntiVaxxer();
-        bool DrugPopulation();
+        bool setDrugTreatment(float proportion);
         double GetCosts();
         double GetInfected();
         double GetSubseptible();

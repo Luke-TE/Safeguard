@@ -1,8 +1,9 @@
 ﻿
 using System;
+
 namespace healthHack
 {
-    public class SIRModel
+    public class SIRModel : IModelInterface
     {
         private float MAX_POPULATION;
         private float susceptible;
@@ -53,9 +54,14 @@ namespace healthHack
             this.proportion_treated = proportionTreated;
         }
 
-        public void setVaccination(float vaccinated_proportion)
+        public bool setVaccine(float vaccinated_proportion)
         {
+            if (0 <= vaccinated_proportion && vaccinated_proportion <= 1)
+            {
+                this.proportion_vaccinated = vaccinated;
+            }
             this.proportion_vaccinated = vaccinated_proportion;
+            return 
         }
 
         public float change_in_infected_U()
@@ -73,7 +79,7 @@ namespace healthHack
             return (1 / this.recovery_treated) * this.infected_TR + (1 / this.recovery_untreated) * this.infected_U;
         }
 
-        public void update()
+        public void Update()
         {
             // Apply vaccines
             this.susceptible = this.susceptible * (1 - this.proportion_vaccinated);
@@ -121,6 +127,41 @@ namespace healthHack
             Console.WriteLine("Enter to exit...");
             Console.ReadLine();
             return 0;
+        }
+
+        public bool AddAntiVaxxer()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool setDrugTreatment(float proportion)
+        {
+            throw new NotImplementedException();
+        }
+
+        public double GetCosts()
+        {
+            throw new NotImplementedException();
+        }
+
+        public double GetInfected()
+        {
+            throw new NotImplementedException();
+        }
+
+        public double GetSubseptible()
+        {
+            throw new NotImplementedException();
+        }
+
+        public double GetDead()
+        {
+            throw new NotImplementedException();
+        }
+
+        public double GetRecovered()
+        {
+            throw new NotImplementedException();
         }
     }
 }
