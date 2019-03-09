@@ -8,18 +8,6 @@ namespace healthHack
         private string name;
         
         //private Board board;
-public static void  Main()
-        {
-            //int i = 0;
-            //while (i < 25)
-            //{
-            //    new City();
-            //    i++;
-            //}
-
-            new Board(20);
-
-        }
 
         private int START_POPULATION;
         private int INFECTION_LIMIT;

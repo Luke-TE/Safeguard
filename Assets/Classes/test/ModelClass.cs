@@ -9,11 +9,11 @@ namespace healthHack
         bool setVaccine(float proportion);
         bool AddAntiVaxxer();
         bool setDrugTreatment(float proportion);
-        double GetCosts();
-        double GetInfected();
-        double GetSubseptible();
-        double GetDead();
-        double GetRecovered();
+        float GetCosts();
+        float GetInfected();
+        float GetSubseptible();
+        float GetDead();
+        float GetRecovered();
     }
 }
 

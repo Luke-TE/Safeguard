@@ -49,19 +49,24 @@ namespace healthHack
             return this.proportion_treated;
         }
 
-        public void setProportionTreated(float proportionTreated)
+        public bool setDrugTreatment(float proportionTreated)
         {
-            this.proportion_treated = proportionTreated;
+            if (0 <= proportionTreated && proportionTreated <= 1)
+            {
+                this.proportion_treated = proportionTreated;
+                return true;
+            }
+            return false;
         }
 
         public bool setVaccine(float vaccinated_proportion)
         {
             if (0 <= vaccinated_proportion && vaccinated_proportion <= 1)
             {
-                this.proportion_vaccinated = vaccinated;
+                this.proportion_vaccinated = vaccinated_proportion;
+                return true;
             }
-            this.proportion_vaccinated = vaccinated_proportion;
-            return 
+            return false;
         }
 
         public float change_in_infected_U()
@@ -117,10 +122,10 @@ namespace healthHack
             {
                 if (i == 20)
                 {
-                    model.setProportionTreated((float)0.3);
-                    model.setVaccination(0.0001f);
+                    model.setDrugTreatment((float)0.3);
+                    model.setVaccine(0.0001f);
                 }
-                model.update();
+                model.Update();
                 model.display();
             }
 
@@ -131,37 +136,32 @@ namespace healthHack
 
         public bool AddAntiVaxxer()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
-        public bool setDrugTreatment(float proportion)
+        public float GetCosts()
         {
             throw new NotImplementedException();
         }
 
-        public double GetCosts()
+        public float GetInfected()
+        {
+            return this.infected_TR + this.infected_U;
+        }
+
+        public float GetSubseptible()
+        {
+            return this.susceptible;
+        }
+
+        public float GetDead()
         {
             throw new NotImplementedException();
         }
 
-        public double GetInfected()
+        public float GetRecovered()
         {
-            throw new NotImplementedException();
-        }
-
-        public double GetSubseptible()
-        {
-            throw new NotImplementedException();
-        }
-
-        public double GetDead()
-        {
-            throw new NotImplementedException();
-        }
-
-        public double GetRecovered()
-        {
-            throw new NotImplementedException();
+            return this.recovered;
         }
     }
 }
