@@ -691,11 +691,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Jonathans Stuff\\Imperial\\HEALTHHACK\\Safeguard\\Classes\\test\\test.csproj",
+      "projectUniqueName": "C:\\Jonathans Stuff\\Imperial\\HEALTHHACK\\Safeguard\\Assets\\Classes\\test\\test.csproj",
       "projectName": "test",
-      "projectPath": "C:\\Jonathans Stuff\\Imperial\\HEALTHHACK\\Safeguard\\Classes\\test\\test.csproj",
+      "projectPath": "C:\\Jonathans Stuff\\Imperial\\HEALTHHACK\\Safeguard\\Assets\\Classes\\test\\test.csproj",
       "packagesPath": "C:\\Users\\jonat\\.nuget\\packages\\",
-      "outputPath": "C:\\Jonathans Stuff\\Imperial\\HEALTHHACK\\Safeguard\\Classes\\test\\obj\\",
+      "outputPath": "C:\\Jonathans Stuff\\Imperial\\HEALTHHACK\\Safeguard\\Assets\\Classes\\test\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
