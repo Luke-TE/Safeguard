@@ -1,4 +1,4 @@
-﻿
+
 using System;
 
 namespace healthHack
@@ -165,4 +165,3 @@ namespace healthHack
         }
     }
 }
-
