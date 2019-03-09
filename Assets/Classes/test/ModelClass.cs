@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 
 namespace healthHack 
@@ -16,4 +16,5 @@ namespace healthHack
         double GetRecovered();
     }
 }
+
 
