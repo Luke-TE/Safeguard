@@ -69,5 +69,9 @@ namespace healthHack
             return this.model;
         }
 
+ //       void OnMouseDown()
+ //       {
+ //          Debug.Log("City Clicked");
+ //       }
     }
 }

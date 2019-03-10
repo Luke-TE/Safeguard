@@ -32,7 +32,7 @@ namespace healthHack
             
             cities = new List<Transform>();
             paths = new List<Tuple<Transform, Transform>>();
-
+            numberOfCities = Difficulty.GetNumOfCities();
             CreateCities(numberOfCities);
             CreateCompleteGraph();
             ReduceGraph();
@@ -98,6 +98,8 @@ namespace healthHack
                 var spriteTransform = InstantiateSpriteObject<City>(nodeTexture, 500f);
                 spriteTransform.position = new Vector2((float)x, (float)y);
                 spriteTransform.name = cityName;
+                spriteTransform.gameObject.AddComponent<BoxCollider>();
+                
 
                 cityNames.RemoveAt(cityIndex);
                 cities.Add(spriteTransform);
@@ -158,6 +160,9 @@ namespace healthHack
                     Vector3 newScale = new Vector3 ((float)v1tov2, 1, 0);
                     Transform.localScale = newScale;
                     (Transform.gameObject.GetComponent("SpriteRenderer") as SpriteRenderer).color = new Color(j, j + 0.05f, j);
+                    Transform.gameObject.AddComponent<BoxCollider>();
+                    Transform.name = path.Item1.name + " to " + path.Item2.name;
+                    
                     j = j + 0.01f;
                 }
             }

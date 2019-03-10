@@ -15,6 +15,7 @@ public class Difficulty : MonoBehaviour
     public void SetNumOfCities(int value)
     {
         numOfCities = value;
+        Debug.Log(numOfCities);
     }
 
     public void SetDiseaseCoeff(string disease)

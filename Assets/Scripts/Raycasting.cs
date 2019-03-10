@@ -22,9 +22,10 @@ public class Raycasting : MonoBehaviour
             
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                Debug.Log("wow");
                 //print out the name if the raycast hits something
                 Debug.Log(hit.collider.name);
+                
+                
                 //freeclup= hit.collider.name;
             }
         }
