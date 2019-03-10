@@ -71,9 +71,15 @@ namespace healthHack
         {
             foreach (Tuple<Transform, Transform> path in paths)
             {
+                Debug.Log((path.Item2.gameObject.GetComponent("City") as City).name);
                 if ((path.Item1.gameObject.GetComponent("City") as City).spreads(path.Item2.gameObject.GetComponent("City") as City))
                 {
                     (path.Item2.gameObject.GetComponent("City") as City).getModel().ExternalInfect(1);
+                } else if ((path.Item2.gameObject.GetComponent("City") as City).spreads(
+                    path.Item1.gameObject.GetComponent("City") as City))
+                {
+                    (path.Item1.gameObject.GetComponent("City") as City).getModel().ExternalInfect(1);
+
                 }
             }
         }
