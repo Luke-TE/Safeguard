@@ -20,7 +20,6 @@ namespace healthHack
         public Text subPop;
         public Text infPop;
         public Text immunePop;
-        public Text happiness; 
         public Texture2D nodeTexture;
         public Texture2D pathTexture;
         public Vector2 centrePos;
@@ -195,20 +194,21 @@ namespace healthHack
         {
             nameForStats = name;
             City cit;
-            if (cityNamesOriginal.Contains(name))
+            if (cityNamesOriginal.Contains(nameForStats))
             {
                 selectedCitytext.text = "Selected City: " + nameForStats;
                 
 
                 foreach (var trans in cities)
                 {
-                    if (trans.gameObject.name == name)
+                    if (trans.gameObject.name == nameForStats)
                     {
                         cit = trans.gameObject.GetComponent<City>();
-                        infPop.text = "Infected Population: " + cit.getModel().GetInfected();
-                        subPop.text = "Susceptible Population: " + cit.getModel().GetSusceptible();
-                        immunePop.text = "Immune Population: " + cit.getModel().GetRecovered();
-                        gameObject.SendMessage("setCity", trans);
+                        totalPop.text = "Total Population: " + Math.Ceiling(cit.getModel().GetTotalPopulation());
+                        infPop.text = "Infected Population: " + Math.Ceiling(cit.getModel().GetInfected());
+                        subPop.text = "Susceptible Population: " + Math.Ceiling(cit.getModel().GetSusceptible());
+                        immunePop.text = "Immune Population: " + Math.Ceiling(cit.getModel().GetRecovered());
+                       // gameObject.SendMessage("setCity", trans);
 
                     }
                     
@@ -216,6 +216,30 @@ namespace healthHack
             }
 
         }
+
+       public void refresh()
+       {
+           City cit;
+           if (cityNamesOriginal.Contains(nameForStats))
+           {
+               selectedCitytext.text = "Selected City: " + nameForStats;
+                
+
+               foreach (var trans in cities)
+               {
+                   if (trans.gameObject.name == nameForStats)
+                   {
+                       cit = trans.gameObject.GetComponent<City>();
+                       totalPop.text = "Total Population: " + Math.Ceiling(cit.getModel().GetTotalPopulation());
+                       infPop.text = "Infected Population: " + Math.Ceiling(cit.getModel().GetInfected());
+                       subPop.text = "Susceptible Population: " + Math.Ceiling(cit.getModel().GetSusceptible());
+                       immunePop.text = "Immune Population: " + Math.Ceiling(cit.getModel().GetRecovered());
+
+                   }
+                    
+               }
+           }
+       }
 
     }
 }
