@@ -16,6 +16,7 @@
           <e p="Raycasting.cs" t="Include" />
           <e p="SIRmodel.cs" t="Include" />
           <e p="StartUp.cs" t="Include" />
+          <e p="Timer.cs" t="Include" />
           <e p="updateCityName.cs" t="Include" />
         </e>
       </e>

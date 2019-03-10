@@ -24,8 +24,7 @@ public class Raycasting : MonoBehaviour
             {
                 //print out the name if the raycast hits something
                 Debug.Log(hit.collider.name);
-                
-                
+                gameObject.SendMessage("updateStats", hit.collider.name);
                 //freeclup= hit.collider.name;
             }
         }

@@ -1,24 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.UI;
 
 namespace healthHack
 {
     public class Board : MonoBehaviour
     {
         private System.Random random;
-        
+        public Text selectedCitytext;
         private List<Transform> cities;
         private List<Tuple<Transform, Transform>> paths;
         private List<string> cityNames;
-
+        private List<string> cityNamesOriginal;
+        public Text totalPop;
+        public Text subPop;
+        public Text infPop;
+        public Text immunePop;
+        public Text happiness; 
         public Texture2D nodeTexture;
         public Texture2D pathTexture;
         public Vector2 centrePos;
         public double radius;
         public int numberOfCities;
-
+        public string nameForStats;
+        
         private long ticks;
 
 
@@ -26,14 +34,14 @@ namespace healthHack
         {            
             random = new System.Random();
             cityNames = new List<string>(new string[] { "ETHEL", "LAUREL", "TABERNASH", "HARDESTY", "AMAGANSETT", "PURVIS", "MARTHA", "WOODWAY", "WATFORD", "METZGER", "RICKETTS", "STEAMBOAT ROCK", "ARLINGTON HEIGHTS", "DRIPPING SPRINGS", "ZILLAH", "CARBON HILL", "SANDY VALLEY", "DUDLEY", "WATERVILLE", "ALTON NORTH", "MOORESVILLE", "PISTAKEE HIGHLANDS", "SAN LUCAS", "ALBERTVILLE", "GRAND JUNCTION", "DUNNELL", "ROWLETT", "WILSON-CONOCOCHEAGUE", "ANDOVER", "ALGONA", "ORCHARD", "VIOLA", "NAPLES", "BOARDMAN", "MIDWAY-HARDWICK", "BELFRY", "FORT LEE", "BREMEN", "NEW POST", "ELKTON", "DANUBE", "PARK RIDGE", "HOUSTON", "LAKE BUTLER", "OGDEN", "COZAD", "CALEDONIA", "GOLDEN VALLEY", "RAYLAND", "TYRONE", "KINGSTON SPRINGS", "CAROLINA", "HUNTINGTON", "BRIARCLIFFE ACRES", "ESPARTO", "ALTOONA", "EDGEWOOD", "BUTLER", "VINE HILL", "STEINAUER", "NEWPORT", "MARION", "BURBANK", "WEST GLENDIVE", "LAKE ANDES", "DAISY", "CHESTERHILL", "BRUNSWICK", "EAST HAMPTON", "UNION", "WHITEWATER", "GARNETT", "HICKSVILLE", "WYOMING", "COMSTOCK", "PORTLAND", "TROY", "ST. FLORIAN", "BASSFIELD", "LAKE ERIE BEACH", "THE VILLAGE OF INDIAN HILL", "NORTH SIOUX CITY", "OVID", "SPRAGUE", "GOLD BAR", "ROCK SPRINGS", "SEDALIA", "KINGSTOWN", "PECAN HILL", "ESTHERVILLE", "NEW HOME", "CAMBRIAN PARK", "COOKEVILLE", "BARNESTON", "REDWATER", "RIO RICO SOUTHWEST", "MUDDY", "SUCCASUNNA-KENVIL", "HALLSVILLE", "NORTH NEWTON", "SOLIS" });
-            
+            cityNamesOriginal = new List<string>(cityNames);
             cities = new List<Transform>();
             paths = new List<Tuple<Transform, Transform>>();
             numberOfCities = Difficulty.GetNumOfCities();
             CreateCities(numberOfCities);
             CreateCompleteGraph();
             ReduceGraph();
-
+                     selectedCitytext.text = "Selected City";
             ticks = DateTime.Now.Ticks;
         }
 
@@ -163,6 +171,32 @@ namespace healthHack
             
             spriteRenderer.sprite = sprite;            
             return spriteTransform;
+        }
+
+       public void updateStats(String name)
+        {
+            nameForStats = name;
+            City cit;
+            if (cityNamesOriginal.Contains(name))
+            {
+                selectedCitytext.text = "Selected City: " + nameForStats;
+                
+
+                foreach (var trans in cities)
+                {
+                    if (trans.gameObject.name == name)
+                    {
+                        cit = trans.gameObject.GetComponent<City>();
+                        infPop.text = "Infected Population: " + cit.getModel().GetInfected();
+                        subPop.text = "Susceptible Population: " + cit.getModel().GetSubseptible();
+                        immunePop.text = "Immune Population: " + cit.getModel().GetRecovered();
+                        gameObject.SendMessage("setCity", trans);
+
+                    }
+                    
+                }
+            }
+
         }
 
     }

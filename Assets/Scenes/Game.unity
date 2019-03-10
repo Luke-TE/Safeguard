@@ -601,7 +601,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -60.2, y: 0}
+  m_AnchoredPosition: {x: -60.199707, y: 0}
   m_SizeDelta: {x: -120.4, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &435483959
@@ -770,8 +770,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -63, y: 171.83}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 1.1, y: 172.17}
+  m_SizeDelta: {x: 288.2, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &582772259
 MonoBehaviour:
@@ -1312,11 +1312,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8795412daab78074e9907a96f233ebc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfCities: 5
+  selectedCitytext: {fileID: 582772259}
   nodeTexture: {fileID: 2800000, guid: 218d21676acfb6a439bac98abba5892d, type: 3}
   pathTexture: {fileID: 2800000, guid: c011a47dfdaadee40ad37a47d7a18810, type: 3}
   centrePos: {x: -5, y: 0}
   radius: 6
+  numberOfCities: 5
+  nameForStats: 
 --- !u!1 &1302551840
 GameObject:
   m_ObjectHideFlags: 0
