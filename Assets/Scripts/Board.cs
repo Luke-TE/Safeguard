@@ -30,7 +30,7 @@ namespace healthHack
         public Text vaxText;
         public Text medText;
         public Text mone;
-        public int money = 100000000;
+        public int money = 10000000;
         
 
         private float ticks;
