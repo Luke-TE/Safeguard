@@ -26,6 +26,7 @@ namespace healthHack
         public double radius;
         public int numberOfCities;
         public string nameForStats;
+        public Transform currentCityTrans;
 
         private float ticks;
 
@@ -112,6 +113,7 @@ namespace healthHack
 
                 cityNames.RemoveAt(cityIndex);
                 cities.Add(spriteTransform);
+                currentCityTrans = spriteTransform;
             }           
         }
 
@@ -203,6 +205,7 @@ namespace healthHack
                 {
                     if (trans.gameObject.name == nameForStats)
                     {
+                        currentCityTrans = trans;
                         cit = trans.gameObject.GetComponent<City>();
                         totalPop.text = "Total Population: " + Math.Ceiling(cit.getModel().GetTotalPopulation());
                         infPop.text = "Infected Population: " + Math.Ceiling(cit.getModel().GetInfected());
