@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+
 namespace healthHack
 {
     public class Board : MonoBehaviour
@@ -19,11 +20,13 @@ namespace healthHack
         public double radius;
         public int numberOfCities;
 
-        private long ticks;
+        private float ticks;
 
+        private bool start;
 
         void Start()
-        {            
+        {
+            start = false;
             random = new System.Random();
             cityNames = new List<string>(new string[] { "ETHEL", "LAUREL", "TABERNASH", "HARDESTY", "AMAGANSETT", "PURVIS", "MARTHA", "WOODWAY", "WATFORD", "METZGER", "RICKETTS", "STEAMBOAT ROCK", "ARLINGTON HEIGHTS", "DRIPPING SPRINGS", "ZILLAH", "CARBON HILL", "SANDY VALLEY", "DUDLEY", "WATERVILLE", "ALTON NORTH", "MOORESVILLE", "PISTAKEE HIGHLANDS", "SAN LUCAS", "ALBERTVILLE", "GRAND JUNCTION", "DUNNELL", "ROWLETT", "WILSON-CONOCOCHEAGUE", "ANDOVER", "ALGONA", "ORCHARD", "VIOLA", "NAPLES", "BOARDMAN", "MIDWAY-HARDWICK", "BELFRY", "FORT LEE", "BREMEN", "NEW POST", "ELKTON", "DANUBE", "PARK RIDGE", "HOUSTON", "LAKE BUTLER", "OGDEN", "COZAD", "CALEDONIA", "GOLDEN VALLEY", "RAYLAND", "TYRONE", "KINGSTON SPRINGS", "CAROLINA", "HUNTINGTON", "BRIARCLIFFE ACRES", "ESPARTO", "ALTOONA", "EDGEWOOD", "BUTLER", "VINE HILL", "STEINAUER", "NEWPORT", "MARION", "BURBANK", "WEST GLENDIVE", "LAKE ANDES", "DAISY", "CHESTERHILL", "BRUNSWICK", "EAST HAMPTON", "UNION", "WHITEWATER", "GARNETT", "HICKSVILLE", "WYOMING", "COMSTOCK", "PORTLAND", "TROY", "ST. FLORIAN", "BASSFIELD", "LAKE ERIE BEACH", "THE VILLAGE OF INDIAN HILL", "NORTH SIOUX CITY", "OVID", "SPRAGUE", "GOLD BAR", "ROCK SPRINGS", "SEDALIA", "KINGSTOWN", "PECAN HILL", "ESTHERVILLE", "NEW HOME", "CAMBRIAN PARK", "COOKEVILLE", "BARNESTON", "REDWATER", "RIO RICO SOUTHWEST", "MUDDY", "SUCCASUNNA-KENVIL", "HALLSVILLE", "NORTH NEWTON", "SOLIS" });
             
@@ -34,17 +37,25 @@ namespace healthHack
             CreateCompleteGraph();
             ReduceGraph();
 
-            ticks = DateTime.Now.Ticks;
+            ticks = 0;
         }
 
         public void Update()
         {
-            if (DateTime.Now.Ticks - ticks > 1000)
+            if (start == false)
+            {
+                int startingInfection = random.Next(cities.Count - 1);
+                (cities[startingInfection].gameObject.GetComponent("City") as City).getModel().ExternalInfect(1);
+                start = true;
+            }
+
+            if (ticks > 1)
             {
                 spreadDisease();
                 UpdateCities();
-                ticks = DateTime.Now.Ticks;
+                ticks = 0;
             }
+            ticks += Time.deltaTime;
         }
 
         private void spreadDisease()
@@ -62,7 +73,12 @@ namespace healthHack
         {
             foreach (Transform c in cities)
             {
-                (c.gameObject.GetComponent("City") as City).Update();
+                City city = (c.gameObject.GetComponent("City") as City);
+                city.getModel().Update();
+                (c.gameObject.GetComponent("SpriteRenderer") as SpriteRenderer).color =
+                    new Color(1.0f, 1.0f - (float)(Math.Log10(city.getModel().GetInfected()) / Math.Log10(city.getModel().GetTotalPopulation())), 1.0f - (float)(Math.Log10(city.getModel().GetInfected()) / Math.Log10(city.getModel().GetTotalPopulation())));
+                Debug.Log(city.getModel().GetInfected() / city.getModel().GetTotalPopulation());
+
             }
         }
 

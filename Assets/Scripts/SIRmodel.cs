@@ -117,6 +117,7 @@ namespace healthHack
             this.infected_TR += i_tr;
             this.recovered += r;
             this.total_cost += cost;
+            this.display();
         }
 
         public void display()
@@ -172,7 +173,7 @@ namespace healthHack
             return this.infected_TR + this.infected_U;
         }
 
-        public float GetSubseptible()
+        public float GetSusceptible()
         {
             return this.susceptible;
         }
@@ -198,6 +199,11 @@ namespace healthHack
 
             this.infected_U += infect;
             this.susceptible -= infect;
+        }
+
+        public float GetTotalPopulation()
+        {
+            return this.MAX_POPULATION;
         }
     }
 }

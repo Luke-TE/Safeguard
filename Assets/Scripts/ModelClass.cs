@@ -12,9 +12,10 @@ namespace healthHack
         float GetLastCost();
         float GetTotalCost();
         float GetInfected();
-        float GetSubseptible();
+        float GetSusceptible();
         float GetDead();
         float GetRecovered();
+        float GetTotalPopulation();
 
         void ExternalInfect(float quantity);
     }

@@ -27,13 +27,13 @@ namespace healthHack
 
             infectionLimit = (int)Math.Ceiling(infectionPopulationRandom * startPopulation);
 
-            model = new SIRModel(startPopulation, 5, 0.5f, 0.00001f, 14, 7);
+            model = new SIRModel(1000000, 0, 0.5f, 0.000001f, 14, 7);
         }
 
         public bool spreads(City city)
         {
             double prob = randomGenerator.NextDouble();
-            if (this.model.GetInfected() / startPopulation > prob)
+            if (this.model.GetInfected() / this.model.GetTotalPopulation() > 0)
             {
                 city.infectPopulation();
                 return true;
@@ -43,7 +43,6 @@ namespace healthHack
 
         public void Update()
         {
-            model.Update();
         }
 
         public void infectPopulation()
