@@ -1,9 +1,14 @@
+
 using System;
 
 namespace healthHack
 {
     public class SIRModel : IModelInterface
     {
+        private float COST_OF_DRUG;
+        private float COST_OF_VACCINE;
+
+
         private float MAX_POPULATION;
         private float susceptible;
         private float infected_U;
@@ -11,6 +16,10 @@ namespace healthHack
         private float recovered;
         private float vaccinated;
 
+
+
+        private float cost = 0;
+        private float total_cost = 0;
         private int time;
         private float proportion_treated;
         private float proportion_vaccinated;
@@ -22,8 +31,12 @@ namespace healthHack
 
         public SIRModel(float susceptible, float infected_U, float treatment_reduction, float background_transmission_rate, int recovery_untreated, int recovery_treated)
         {
+            this.COST_OF_DRUG = 5;
+            this.COST_OF_VACCINE = 15;
+
             this.susceptible = susceptible;
             this.infected_U = infected_U;
+            this.MAX_POPULATION = susceptible + infected_U;
             this.infected_TR = 0;
             this.recovered = 0;
             this.vaccinated = 0;
@@ -82,9 +95,13 @@ namespace healthHack
 
         public void Update()
         {
+            this.cost = 0;
             // Apply vaccines
             this.susceptible = this.susceptible * (1 - this.proportion_vaccinated);
-            this.vaccinated += this.susceptible * this.proportion_vaccinated;
+            float v = this.susceptible * this.proportion_vaccinated;
+
+            this.vaccinated += v;
+            this.cost += v * this.COST_OF_VACCINE;
 
             // Apply all other logic
             float s = this.change_in_susceptible();
@@ -92,11 +109,14 @@ namespace healthHack
             float i_tr = this.change_in_infected_TR();
             float r = this.change_in_recovered();
 
+            this.cost += this.background_transmission_rate * this.susceptible * (this.infected_U + this.treatment_reduction * this.infected_TR) * this.getProportionTreated() * this.COST_OF_DRUG;
+
             this.time += 1;
             this.susceptible += s;
             this.infected_U += i_u;
             this.infected_TR += i_tr;
             this.recovered += r;
+            this.total_cost += cost;
         }
 
         public void display()
@@ -107,6 +127,8 @@ namespace healthHack
             Console.WriteLine("Inf_TR: " + this.infected_TR);
             Console.WriteLine("Recov: " + this.recovered);
             Console.WriteLine("Vaccin: " + this.vaccinated);
+            Console.WriteLine("Costs: " + this.cost);
+            Console.WriteLine("TOTAL COSTS: " + this.total_cost);
         }
 
 
@@ -137,7 +159,12 @@ namespace healthHack
 
         public float GetCosts()
         {
-            throw new NotImplementedException();
+            return this.cost;
+        }
+
+        public float GetTotalCost()
+        {
+            return this.total_cost;
         }
 
         public float GetInfected()
@@ -158,6 +185,19 @@ namespace healthHack
         public float GetRecovered()
         {
             return this.recovered;
+        }
+
+        public float GetLastCost()
+        {
+            return this.total_cost;
+        }
+
+        public void ExternalInfect(float quantity)
+        {
+            float infect = Math.Min(quantity, this.susceptible);
+
+            this.infected_U += infect;
+            this.susceptible -= infect;
         }
     }
 }
