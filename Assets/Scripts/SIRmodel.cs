@@ -189,7 +189,7 @@ namespace healthHack
 
         public float GetRecovered()
         {
-            return this.recovered;
+            return this.recovered + this.vaccinated;
         }
 
         public float GetLastCost()
