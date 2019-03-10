@@ -27,6 +27,11 @@ namespace healthHack
         public int numberOfCities;
         public string nameForStats;
         public Transform currentCityTrans;
+        public Text vaxText;
+        public Text medText;
+        public Text mone;
+        public int money = 100000;
+        
 
         private float ticks;
 
@@ -218,6 +223,9 @@ namespace healthHack
                         subPop.text = "Susceptible Population: " + Math.Ceiling(cit.getModel().GetSusceptible());
                         immunePop.text = "Immune Population: " + Math.Ceiling(cit.getModel().GetRecovered());
                        // gameObject.SendMessage("setCity", trans);
+                       medText.text = "0";
+                       vaxText.text = "0";
+
 
                     }
                     
@@ -228,7 +236,23 @@ namespace healthHack
 
        public void refresh()
        {
+
+          money += 1000;
+           mone.text = "Money: $ " + money;
            City cit;
+           
+           float  totalCost = 0.0f;
+           foreach (var trans in cities)
+           {
+               City c = trans.gameObject.GetComponent<City>();
+               totalCost += c.getModel().GetLastCost();
+               Debug.Log("totalCost: " + totalCost);
+           }
+           money  = money -  (int) Math.Ceiling(totalCost);
+
+           
+
+
            if (cityNamesOriginal.Contains(nameForStats))
            {
                selectedCitytext.text = "Selected City: " + nameForStats;
@@ -244,8 +268,12 @@ namespace healthHack
                        subPop.text = "Susceptible Population: " + Math.Ceiling(cit.getModel().GetSusceptible());
                        immunePop.text = "Immune Population: " + Math.Ceiling(cit.getModel().GetRecovered());
 
+
                    }
-                    
+
+                   
+                   
+
                }
            }
        }

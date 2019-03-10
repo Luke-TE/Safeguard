@@ -74,6 +74,7 @@ namespace healthHack
             if (0 <= vaccinated_proportion && vaccinated_proportion <= 1)
             {
                 this.proportion_vaccinated = vaccinated_proportion;
+                
                 return true;
             }
             return false;
@@ -98,6 +99,8 @@ namespace healthHack
         {
             this.cost = 0;
             // Apply vaccines
+            
+            Debug.Log(this.proportion_vaccinated);
             this.susceptible = this.susceptible * (1 - this.proportion_vaccinated);
             float v = this.susceptible * this.proportion_vaccinated;
 
@@ -111,7 +114,7 @@ namespace healthHack
             float r = this.change_in_recovered();
 
             this.cost += this.background_transmission_rate * this.susceptible * (this.infected_U + this.treatment_reduction * this.infected_TR) * this.getProportionTreated() * this.COST_OF_DRUG;
-
+            
             this.time += 1;
             this.susceptible += s;
             this.infected_U += i_u;
@@ -136,7 +139,7 @@ namespace healthHack
 
         static int Main(string[] args)
         {
-            SIRModel model = new SIRModel(500000, 1, (float)0.5, (float)0.000001, 14, 7);
+            SIRModel model = new SIRModel(500000, 1, (float)0.5, (float)0.0000001 *Difficulty.getdis(), 14, 7);
             model.display();
             for (int i = 0; i < 50; i++)
             {
@@ -191,7 +194,7 @@ namespace healthHack
 
         public float GetLastCost()
         {
-            return this.total_cost;
+            return this.cost;
         }
 
         public void ExternalInfect(float quantity)

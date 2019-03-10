@@ -11,8 +11,10 @@ namespace healthHack
     {
 
         public Text t;
-        string lastAction;
-        int percentage;
+        string lastAction = "";
+        int percentage = 0;
+        private string name = "";
+        private bool clicked;
         public Board board;
         public Text percentageVac;
         Transform cityChange;
@@ -28,12 +30,16 @@ namespace healthHack
             string val = percentageVac.text;
             setPercentage(Int32.Parse(val));    
             Complete_Action(Action);
+            name  = (cityChange.gameObject.GetComponent("City") as City).name;
+            clicked = true;
         }
 
         private void Update()
         {
-
-            t.text = lastAction + (cityChange.gameObject.GetComponent("City") as City).name + " by" + percentage + "%" ;
+            if (clicked)
+            {
+                t.text = lastAction + ": " + (name + " by " + percentage + "%");
+            }
         }
 
 
@@ -45,12 +51,13 @@ namespace healthHack
                 case "Delete Path":
                     break;
                 case "Vaccinate City":
-                    (cityChange.gameObject.GetComponent("City") as City).getModel().setVaccine(percentage / 100);
+                    (cityChange.gameObject.GetComponent("City") as City).getModel().setVaccine((float)percentage / 100);
+                    Debug.Log("Vaccinate");
                     break;
                 case "Isolate City":
                     break;
                 case "Introduce Drug Treatments":
-                    (cityChange.gameObject.GetComponent("City") as City).getModel().setDrugTreatment(percentage / 100);
+                    (cityChange.gameObject.GetComponent("City") as City).getModel().setDrugTreatment((float)percentage / 100);
                     break;
 
             }

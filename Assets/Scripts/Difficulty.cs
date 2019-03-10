@@ -5,7 +5,7 @@ using UnityEngine;
 public class Difficulty : MonoBehaviour
 {    
     private static int numOfCities = 5;
-    private static double diseaseCoeff = 0.5;
+    private static float diseaseCoeff = 0.5f;
 
     public static int GetNumOfCities()
     {
@@ -23,17 +23,23 @@ public class Difficulty : MonoBehaviour
         switch (disease)
         {
             case "Measles":
-                //diseaseCoeff = 
+                diseaseCoeff = 16;
                 break;
             case "HIV":
-                //diseaseCoeff = 
+                diseaseCoeff = 3;
                 break;
-            //case "Name3":
-            //    diseaseCoeff =
-            //    break;
-            //case "Name4":
-            //    diseaseCoeff =
-            //    break;
+            case "Ebola":
+                diseaseCoeff = 2;
+                break;
+            case "Smallpox":
+                diseaseCoeff = 6;
+                break;
         }        
+    }
+
+
+    public static float getdis()
+    {
+        return diseaseCoeff;
     }
 }

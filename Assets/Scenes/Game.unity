@@ -1812,6 +1812,9 @@ MonoBehaviour:
   numberOfCities: 5
   nameForStats: 
   currentCityTrans: {fileID: 0}
+  vaxText: {fileID: 914843009}
+  medText: {fileID: 2134384192}
+  mone: {fileID: 1594386102}
 --- !u!1 &1198271184
 GameObject:
   m_ObjectHideFlags: 0
@@ -2004,8 +2007,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 58, y: 0}
-  m_SizeDelta: {x: 90.4, y: 38.699997}
+  m_AnchoredPosition: {x: 241, y: 9.675}
+  m_SizeDelta: {x: 456.3, y: 19.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1302551842
 MonoBehaviour:
