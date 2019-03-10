@@ -62,8 +62,11 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Board.cs" />
     <Compile Include="Assets\Scripts\City.cs" />
+    <Compile Include="Assets\Scripts\Difficulty.cs" />
     <Compile Include="Assets\Scripts\MenuChange.cs" />
     <Compile Include="Assets\Scripts\ModelClass.cs" />
+    <Compile Include="Assets\Scripts\Path.cs" />
+    <Compile Include="Assets\Scripts\Raycasting.cs" />
     <Compile Include="Assets\Scripts\SIRmodel.cs" />
     <Compile Include="Assets\Scripts\StartUp.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">

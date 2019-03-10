@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MenuChange : MonoBehaviour
+namespace healthHack
 {
-    public void changemenuscene(string scenename)
+    public class MenuChange : MonoBehaviour
     {
-        Application.LoadLevel(scenename);
+        public void changemenuscene(string scenename)
+        {
+            Application.LoadLevel(scenename);
+        }
     }
+
 }

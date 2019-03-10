@@ -6,12 +6,13 @@ using UnityEngine.SceneManagement;
 
 namespace healthHack
 {
-    [InitializeOnLoad]
+//    [InitializeOnLoad]
     public class StartUp : MonoBehaviour
     {
         static StartUp()
         {
-            Debug.Log("Up and Running");
+            Debug.Log("YEET");
+            Screen.SetResolution(1280, 720, true);
         }
     }
 

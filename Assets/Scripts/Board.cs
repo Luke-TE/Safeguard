@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEditor;
 
 namespace healthHack
@@ -12,12 +13,13 @@ namespace healthHack
         private List<City> cities;
         private List<Tuple<City, City>> paths;
         private List<string> cityNames;
+        public int numberOfCities;
 
         public Texture2D nodeTexture;
         public Texture2D pathTexture;
         public Vector2 centrePos;
         public double radius;
-        public int numberOfCities;
+        
 
         void Start()
         {            
@@ -26,6 +28,9 @@ namespace healthHack
             
             cities = new List<City>();
             paths = new List<Tuple<City, City>>();
+
+            numberOfCities = Difficulty.GetNumOfCities();
+            Debug.Log(Difficulty.GetNumOfCities());
 
             CreateCities(numberOfCities);
             CreateCompleteGraph();
@@ -48,11 +53,21 @@ namespace healthHack
                 var cityName = cityNames[cityIndex];
 
                 var spriteTransform = InstantiateSpriteObject<City>(nodeTexture, 500f);
+
+                var button = spriteTransform.gameObject.AddComponent<Button>();
+                button.onClick.AddListener(TaskOnClick);
+                
+
                 spriteTransform.position = new Vector2((float)x, (float)y);
                 spriteTransform.name = cityName;
-
+                
                 cityNames.RemoveAt(cityIndex);
             }           
+        }
+
+        public void TaskOnClick()
+        {
+            Debug.Log("You have clicked the button!");
         }
 
         public void CreateCompleteGraph()
@@ -82,13 +97,11 @@ namespace healthHack
             var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), pixelsPerUnit);
             var spriteTransform = new GameObject().transform;
             var spriteRenderer = spriteTransform.gameObject.AddComponent<SpriteRenderer>();
-            var spriteCity = spriteTransform.gameObject.AddComponent<T>();
+            var spriteCity = spriteTransform.gameObject.AddComponent<T>();                        
             
-            spriteRenderer.sprite = sprite;            
+            spriteRenderer.sprite = sprite;             
             return spriteTransform;
         }
-
-        public 
     }
 }
 
