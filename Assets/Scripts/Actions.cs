@@ -51,13 +51,13 @@ namespace healthHack
                 case "Delete Path":
                     break;
                 case "Vaccinate City":
-                    (cityChange.gameObject.GetComponent("City") as City).getModel().setVaccine((float)percentage / 100);
+                    (cityChange.gameObject.GetComponent("City") as City).getModel().SetProportionVaccinated((float)percentage / 100);
                     Debug.Log("Vaccinate");
                     break;
                 case "Isolate City":
                     break;
                 case "Introduce Drug Treatments":
-                    (cityChange.gameObject.GetComponent("City") as City).getModel().setDrugTreatment((float)percentage / 100);
+                    (cityChange.gameObject.GetComponent("City") as City).getModel().SetProportionTreated((float)percentage / 100);
                     break;
 
             }

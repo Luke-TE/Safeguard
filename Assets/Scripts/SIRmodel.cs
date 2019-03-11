@@ -6,180 +6,150 @@ namespace healthHack
 {
     public class SIRModel : IModelInterface
     {
-        private float COST_OF_DRUG;
-        private float COST_OF_VACCINE;
+        //Costs                
+        private float totalCost = 0;
 
+        //Population
+        private float totalPop;
+        private float popSusceptible;
+        private float popInfectedU;
+        private float popInfectedTR;
+        private float popRecovered;
+        private float popVaccinated;
+                
+        private float proportionTreated;
+        private float proportionVaccinated;
 
-        private float MAX_POPULATION;
-        private float susceptible;
-        private float infected_U;
-        private float infected_TR;
-        private float recovered;
-        private float vaccinated;
-
-
-
-        private float cost = 0;
-        private float total_cost = 0;
-        private int time;
-        private float proportion_treated;
-        private float proportion_vaccinated;
-
-        private float treatment_reduction;
-        private float background_transmission_rate;
+        private float treatmentMultiplier;
+        private float backgroundTransmissionRate;
         private float recovery_untreated;
         private float recovery_treated;
 
-        public SIRModel(float susceptible, float infected_U, float treatment_reduction, float background_transmission_rate, int recovery_untreated, int recovery_treated)
-        {
-            this.COST_OF_DRUG = 5;
-            this.COST_OF_VACCINE = 15;
+        public SIRModel(float popSusceptible, float popInfectedU, float treatmentMultiplier, int recovery_untreated, int recovery_treated)
+        {            
+            this.popSusceptible = popSusceptible;
+            this.popInfectedU = popInfectedU;
+            popInfectedTR = 0;
+            popRecovered = 0;
+            popVaccinated = 0;
 
-            this.susceptible = susceptible;
-            this.infected_U = infected_U;
-            this.MAX_POPULATION = susceptible + infected_U;
-            this.infected_TR = 0;
-            this.recovered = 0;
-            this.vaccinated = 0;
+            totalPop = popSusceptible + popInfectedU;            
+            
+            proportionTreated = 0;
+            this.treatmentMultiplier = treatmentMultiplier;
 
-            this.proportion_treated = 0;
-            this.treatment_reduction = treatment_reduction;
-            this.background_transmission_rate = background_transmission_rate;
+            backgroundTransmissionRate = 0.0000001f * Settings.GetDiseaseCoeff();
             this.recovery_treated = recovery_treated;
             this.recovery_untreated = recovery_untreated;
         }
 
-        public float change_in_susceptible()
+        public void Update()
         {
-            return -1 * this.background_transmission_rate * this.susceptible * (this.infected_U + this.treatment_reduction * this.infected_TR);
+            float cost = 0;
+            
+            //Vaccination
+            float vaccinatedThisTurn = popSusceptible * proportionVaccinated;
+            popSusceptible -= popSusceptible * proportionVaccinated;
+            cost += vaccinatedThisTurn * Settings._vaccineCostPP;
+            popVaccinated += vaccinatedThisTurn;
+                        
+            //Medication
+            cost += backgroundTransmissionRate * popSusceptible * 
+                (popInfectedU + treatmentMultiplier * popInfectedTR) * GetProportionTreated() * Settings._drugCostPP;
+            
+            popSusceptible -= CalculateSusceptibleDecrease();
+            popInfectedU += CalculateInfectedUChange();
+            popInfectedTR += CalculateInfectedTRChange();
+            popRecovered += CalculateRecoveredChange();
+            totalCost += cost;
+            Display();
         }
 
-        public float getProportionTreated()
+        public float CalculateSusceptibleDecrease()
         {
-            return this.proportion_treated;
+            return backgroundTransmissionRate * popSusceptible * (popInfectedU + treatmentMultiplier * popInfectedTR);
         }
 
-        public bool setDrugTreatment(float proportionTreated)
+        public float GetProportionTreated()
+        {
+            return proportionTreated;
+        }        
+
+        public bool SetProportionTreated(float proportionTreated)
         {
             if (0 <= proportionTreated && proportionTreated <= 1)
             {
-                this.proportion_treated = proportionTreated;
+                this.proportionTreated = proportionTreated;
                 return true;
             }
             return false;
         }
 
-        public bool setVaccine(float vaccinated_proportion)
+        public bool SetProportionVaccinated(float proportionVaccinated)
         {
-            if (0 <= vaccinated_proportion && vaccinated_proportion <= 1)
+            if (0 <= proportionVaccinated && proportionVaccinated <= 1)
             {
-                this.proportion_vaccinated = vaccinated_proportion;
+                this.proportionVaccinated = proportionVaccinated;
                 
                 return true;
             }
             return false;
         }
 
-        public float change_in_infected_U()
+        public float CalculateInfectedUChange()
         {
-            return this.background_transmission_rate * this.susceptible * (this.infected_U + this.treatment_reduction * this.infected_TR) * (1 - this.getProportionTreated()) - (1 / this.recovery_untreated) * this.infected_U;
+            return this.backgroundTransmissionRate * this.popSusceptible * (this.popInfectedU + this.treatmentMultiplier * this.popInfectedTR) * (1 - this.GetProportionTreated()) - (1 / this.recovery_untreated) * this.popInfectedU;
         }
 
-        public float change_in_infected_TR()
+        public float CalculateInfectedTRChange()
         {
-            return this.background_transmission_rate * this.susceptible * (this.infected_U + this.treatment_reduction * this.infected_TR) * this.getProportionTreated() - (1 / this.recovery_treated) * this.infected_TR;
+            return this.backgroundTransmissionRate * this.popSusceptible * (this.popInfectedU + this.treatmentMultiplier * this.popInfectedTR) * this.GetProportionTreated() - (1 / this.recovery_treated) * this.popInfectedTR;
         }
 
-        public float change_in_recovered()
+        public float CalculateRecoveredChange()
         {
-            return (1 / this.recovery_treated) * this.infected_TR + (1 / this.recovery_untreated) * this.infected_U;
+            return (1 / this.recovery_treated) * this.popInfectedTR + (1 / this.recovery_untreated) * this.popInfectedU;
         }
 
-        public void Update()
+        
+
+        public void Display()
         {
-            this.cost = 0;
-            // Apply vaccines
-            
-            Debug.Log(this.proportion_vaccinated);
-            this.susceptible = this.susceptible * (1 - this.proportion_vaccinated);
-            float v = this.susceptible * this.proportion_vaccinated;
-
-            this.vaccinated += v;
-            this.cost += v * this.COST_OF_VACCINE;
-
-            // Apply all other logic
-            float s = this.change_in_susceptible();
-            float i_u = this.change_in_infected_U();
-            float i_tr = this.change_in_infected_TR();
-            float r = this.change_in_recovered();
-
-            this.cost += this.background_transmission_rate * this.susceptible * (this.infected_U + this.treatment_reduction * this.infected_TR) * this.getProportionTreated() * this.COST_OF_DRUG;
-            
-            this.time += 1;
-            this.susceptible += s;
-            this.infected_U += i_u;
-            this.infected_TR += i_tr;
-            this.recovered += r;
-            this.total_cost += cost;
-            this.display();
+            Console.Write(ToString());
         }
 
-        public void display()
+        public override string ToString()
         {
-            Console.WriteLine("\nDay: " + this.time);
-            Console.WriteLine("Sus: " + this.susceptible);
-            Console.WriteLine("Inf_U: " + this.infected_U);
-            Console.WriteLine("Inf_TR: " + this.infected_TR);
-            Console.WriteLine("Recov: " + this.recovered);
-            Console.WriteLine("Vaccin: " + this.vaccinated);
-            Console.WriteLine("Costs: " + this.cost);
-            Console.WriteLine("TOTAL COSTS: " + this.total_cost);
-        }
+            string text = "\n";
+            text += "Day:  " + Timer.TimePassed + "\n";
+            text += "Sus: " + popSusceptible + "\n";
+            text += "Inf_U: " + popInfectedU + "\n";
+            text += "Inf_TR: " + popInfectedTR + "\n";
+            text += "Recov: " + popRecovered + "\n";
+            text += "Vaccin: " + popVaccinated + "\n";            
+            text += "TOTAL COSTS: " + totalCost + "\n";
+            return text;
+        }        
 
-
-        static int Main(string[] args)
-        {
-            SIRModel model = new SIRModel(500000, 1, (float)0.5, (float)0.0000001 *Difficulty.getdis(), 14, 7);
-            model.display();
-            for (int i = 0; i < 50; i++)
-            {
-                if (i == 20)
-                {
-                    model.setDrugTreatment((float)0.3);
-                    model.setVaccine(0.0001f);
-                }
-                model.Update();
-                model.display();
-            }
-
-            Console.WriteLine("Enter to exit...");
-            Console.ReadLine();
-            return 0;
-        }
 
         public bool AddAntiVaxxer()
         {
-            return true;
+            throw new NotImplementedException();
         }
-
-        public float GetCosts()
-        {
-            return this.cost;
-        }
-
+        
         public float GetTotalCost()
         {
-            return this.total_cost;
+            return totalCost;
         }
 
-        public float GetInfected()
+        public float GetInfectedPopulation()
         {
-            return this.infected_TR + this.infected_U;
+            return popInfectedTR + popInfectedU;
         }
 
-        public float GetSusceptible()
+        public float GetSusceptiblePopulation()
         {
-            return this.susceptible;
+            return popSusceptible;
         }
 
         public float GetDead()
@@ -189,25 +159,45 @@ namespace healthHack
 
         public float GetRecovered()
         {
-            return this.recovered + this.vaccinated;
+            return popRecovered + popVaccinated;
         }
 
         public float GetLastCost()
         {
-            return this.cost;
+            return cost;
         }
 
         public void ExternalInfect(float quantity)
         {
-            float infect = Math.Min(quantity, this.susceptible);
+            float infect = Math.Min(quantity, popSusceptible);
 
-            this.infected_U += infect;
-            this.susceptible -= infect;
+            popInfectedU += infect;
+            popSusceptible -= infect;
         }
 
         public float GetTotalPopulation()
         {
-            return this.MAX_POPULATION;
+            return totalPop;
+        }
+
+        static int Test()
+        {
+            SIRModel model = new SIRModel(500000, 1, 0.5f, 14, 7);
+            model.Display();
+            for (int i = 0; i < 50; i++)
+            {
+                if (i == 20)
+                {
+                    model.SetProportionTreated(0.3f);
+                    model.SetProportionVaccinated(0.0001f);
+                }
+                model.Update();
+                model.Display();
+            }
+
+            Console.WriteLine("Enter to exit...");
+            Console.ReadLine();
+            return 0;
         }
     }
 }

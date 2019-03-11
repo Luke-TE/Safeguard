@@ -46,7 +46,7 @@ namespace healthHack
             cityNamesOriginal = new List<string>(cityNames);
             cities = new List<Transform>();
             paths = new List<Tuple<Transform, Transform>>();
-            numberOfCities = Difficulty.GetNumOfCities();
+            numberOfCities = Settings._numOfCities;
             CreateCities(numberOfCities);
             CreateCompleteGraph();
             ReduceGraph();
@@ -97,8 +97,8 @@ namespace healthHack
                 City city = (c.gameObject.GetComponent("City") as City);
                 city.getModel().Update();
                 (c.gameObject.GetComponent("SpriteRenderer") as SpriteRenderer).color =
-                    new Color(1.0f, 1.0f - (float)(Math.Log10(city.getModel().GetInfected()) / Math.Log10(city.getModel().GetTotalPopulation())), 1.0f - (float)(Math.Log10(city.getModel().GetInfected()) / Math.Log10(city.getModel().GetTotalPopulation())));
-                Debug.Log(city.getModel().GetInfected() / city.getModel().GetTotalPopulation());
+                    new Color(1.0f, 1.0f - (float)(Math.Log10(city.getModel().GetInfectedPopulation()) / Math.Log10(city.getModel().GetTotalPopulation())), 1.0f - (float)(Math.Log10(city.getModel().GetInfectedPopulation()) / Math.Log10(city.getModel().GetTotalPopulation())));
+                Debug.Log(city.getModel().GetInfectedPopulation() / city.getModel().GetTotalPopulation());
 
             }
         }
@@ -219,8 +219,8 @@ namespace healthHack
                         currentCityTrans = trans;
                         cit = trans.gameObject.GetComponent<City>();
                         totalPop.text = "Total Population: " + Math.Ceiling(cit.getModel().GetTotalPopulation());
-                        infPop.text = "Infected Population: " + Math.Ceiling(cit.getModel().GetInfected());
-                        subPop.text = "Susceptible Population: " + Math.Ceiling(cit.getModel().GetSusceptible());
+                        infPop.text = "Infected Population: " + Math.Ceiling(cit.getModel().GetInfectedPopulation());
+                        subPop.text = "Susceptible Population: " + Math.Ceiling(cit.getModel().GetSusceptiblePopulation());
                         immunePop.text = "Immune Population: " + Math.Ceiling(cit.getModel().GetRecovered());
                        // gameObject.SendMessage("setCity", trans);
                        medText.text = "0";
@@ -264,8 +264,8 @@ namespace healthHack
                    {
                        cit = trans.gameObject.GetComponent<City>();
                        totalPop.text = "Total Population: " + Math.Ceiling(cit.getModel().GetTotalPopulation());
-                       infPop.text = "Infected Population: " + Math.Ceiling(cit.getModel().GetInfected());
-                       subPop.text = "Susceptible Population: " + Math.Ceiling(cit.getModel().GetSusceptible());
+                       infPop.text = "Infected Population: " + Math.Ceiling(cit.getModel().GetInfectedPopulation());
+                       subPop.text = "Susceptible Population: " + Math.Ceiling(cit.getModel().GetSusceptiblePopulation());
                        immunePop.text = "Immune Population: " + Math.Ceiling(cit.getModel().GetRecovered());
 
 

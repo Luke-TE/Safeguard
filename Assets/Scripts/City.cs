@@ -27,13 +27,13 @@ namespace healthHack
 
             infectionLimit = (int)Math.Ceiling(infectionPopulationRandom * startPopulation);
 
-            model = new SIRModel(1000000, 0, 0.5f, 0.000001f, 14, 7);
+            model = new SIRModel(1000000, 0, 0.5f, 14, 7);
         }
 
         public bool spreads(City city)
         {
             double prob = randomGenerator.NextDouble();
-            if (this.model.GetInfected() / this.model.GetTotalPopulation() > 0)
+            if (this.model.GetInfectedPopulation() / this.model.GetTotalPopulation() > prob)
             {
                 city.infectPopulation();
                 return true;
@@ -57,11 +57,11 @@ namespace healthHack
 
         public void setVaccineLevel(float proportion)
         {
-            model.setVaccine(proportion);
+            model.SetProportionVaccinated(proportion);
         }
         public void setDrugTreatment(float proportion)
         {
-            model.setDrugTreatment(proportion);
+            model.SetProportionTreated(proportion);
         }
 
         public IModelInterface getModel()

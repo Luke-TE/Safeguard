@@ -7,7 +7,7 @@ namespace healthHack
 {
     public class Timer : MonoBehaviour
     {
-        public int TimePassed;
+        public static int TimePassed;
         private float elapsedTime;
         private int secondsPerDay;
         public Text timeText;
