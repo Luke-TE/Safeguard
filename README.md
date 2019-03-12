@@ -10,7 +10,7 @@ A disease is spreading and it’s ravaging the world! It’s up to your expertis
 You’re in control of the world’s health division: purchasing healthcare, arranging vaccinations and even going as far as closing off a country’s borders all in an attempt to prevent a pandemic. But it’s not only the disease you have to worry about! Performing drastic or unnecessary actions leave a bad impression on the population, lowering their happiness level! 
 
 ## TODO
--Improve vaccination and medication systems and how they interact with money
--Improve income system
--Implement lethal diseases and a loss mechanic when all population is dead
--Implement happiness level and the effects of low happiness
+Improve vaccination and medication systems and how they interact with money
+Improve income system
+Implement lethal diseases and a loss mechanic when all population is dead
+Implement happiness level and the effects of low happiness
