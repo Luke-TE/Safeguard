@@ -4,10 +4,13 @@ using UnityEngine;
 
 namespace healthHack
 {
-    public class SIRModel : IModelInterface
+    public class SIRModel : IModel
     {
+        private const float _spreadMultiplier = 0.0000001f;
+
         //Costs                
-        private float totalCost = 0;
+        private float totalCost;
+        private float cost;
 
         //Population
         private float totalPop;
@@ -22,10 +25,10 @@ namespace healthHack
 
         private float treatmentMultiplier;
         private float backgroundTransmissionRate;
-        private float recovery_untreated;
-        private float recovery_treated;
+        private float recoveryUntreated;
+        private float recoveryTreated;
 
-        public SIRModel(float popSusceptible, float popInfectedU, float treatmentMultiplier, int recovery_untreated, int recovery_treated)
+        public SIRModel(float popSusceptible, float popInfectedU, float treatmentMultiplier, int recoveryUntreated, int recoveryTreated)
         {            
             this.popSusceptible = popSusceptible;
             this.popInfectedU = popInfectedU;
@@ -33,34 +36,39 @@ namespace healthHack
             popRecovered = 0;
             popVaccinated = 0;
 
-            totalPop = popSusceptible + popInfectedU;            
-            
+            totalPop = popSusceptible + popInfectedU;
+
+            totalCost = 0;
+            cost = 0;
+
             proportionTreated = 0;
             this.treatmentMultiplier = treatmentMultiplier;
 
-            backgroundTransmissionRate = 0.0000001f * Settings.GetDiseaseCoeff();
-            this.recovery_treated = recovery_treated;
-            this.recovery_untreated = recovery_untreated;
+            backgroundTransmissionRate = _spreadMultiplier * Settings.GetDiseaseCoeff();
+            this.recoveryTreated = recoveryTreated;
+            this.recoveryUntreated = recoveryUntreated;
         }
 
         public void Update()
         {
-            float cost = 0;
+            cost = 0;
             
             //Vaccination
             float vaccinatedThisTurn = popSusceptible * proportionVaccinated;
+            
             popSusceptible -= popSusceptible * proportionVaccinated;
             cost += vaccinatedThisTurn * Settings._vaccineCostPP;
             popVaccinated += vaccinatedThisTurn;
                         
             //Medication
             cost += backgroundTransmissionRate * popSusceptible * 
-                (popInfectedU + treatmentMultiplier * popInfectedTR) * GetProportionTreated() * Settings._drugCostPP;
+                (popInfectedU + treatmentMultiplier * popInfectedTR) * proportionTreated * Settings._drugCostPP;
             
             popSusceptible -= CalculateSusceptibleDecrease();
             popInfectedU += CalculateInfectedUChange();
             popInfectedTR += CalculateInfectedTRChange();
             popRecovered += CalculateRecoveredChange();
+
             totalCost += cost;
             Display();
         }
@@ -68,12 +76,7 @@ namespace healthHack
         public float CalculateSusceptibleDecrease()
         {
             return backgroundTransmissionRate * popSusceptible * (popInfectedU + treatmentMultiplier * popInfectedTR);
-        }
-
-        public float GetProportionTreated()
-        {
-            return proportionTreated;
-        }        
+        }                
 
         public bool SetProportionTreated(float proportionTreated)
         {
@@ -86,7 +89,7 @@ namespace healthHack
         }
 
         public bool SetProportionVaccinated(float proportionVaccinated)
-        {
+        {            
             if (0 <= proportionVaccinated && proportionVaccinated <= 1)
             {
                 this.proportionVaccinated = proportionVaccinated;
@@ -98,21 +101,19 @@ namespace healthHack
 
         public float CalculateInfectedUChange()
         {
-            return this.backgroundTransmissionRate * this.popSusceptible * (this.popInfectedU + this.treatmentMultiplier * this.popInfectedTR) * (1 - this.GetProportionTreated()) - (1 / this.recovery_untreated) * this.popInfectedU;
+            return backgroundTransmissionRate * popSusceptible * (popInfectedU + treatmentMultiplier * popInfectedTR) * (1 - proportionTreated) - (1 / recoveryUntreated) * popInfectedU;
         }
 
         public float CalculateInfectedTRChange()
         {
-            return this.backgroundTransmissionRate * this.popSusceptible * (this.popInfectedU + this.treatmentMultiplier * this.popInfectedTR) * this.GetProportionTreated() - (1 / this.recovery_treated) * this.popInfectedTR;
+            return backgroundTransmissionRate * popSusceptible * (popInfectedU + treatmentMultiplier * popInfectedTR) * proportionTreated - (1 / recoveryTreated) * popInfectedTR;
         }
 
         public float CalculateRecoveredChange()
         {
-            return (1 / this.recovery_treated) * this.popInfectedTR + (1 / this.recovery_untreated) * this.popInfectedU;
+            return (1 / recoveryTreated) * popInfectedTR + (1 / recoveryUntreated) * popInfectedU;
         }
-
         
-
         public void Display()
         {
             Console.Write(ToString());
@@ -121,7 +122,7 @@ namespace healthHack
         public override string ToString()
         {
             string text = "\n";
-            text += "Day:  " + Timer.TimePassed + "\n";
+            text += "Day:  " + Timer.DaysPassed + "\n";
             text += "Sus: " + popSusceptible + "\n";
             text += "Inf_U: " + popInfectedU + "\n";
             text += "Inf_TR: " + popInfectedTR + "\n";
@@ -160,14 +161,9 @@ namespace healthHack
         public float GetRecovered()
         {
             return popRecovered + popVaccinated;
-        }
+        }        
 
-        public float GetLastCost()
-        {
-            return cost;
-        }
-
-        public void ExternalInfect(float quantity)
+        public void InfectPopulation(float quantity)
         {
             float infect = Math.Min(quantity, popSusceptible);
 
@@ -178,6 +174,11 @@ namespace healthHack
         public float GetTotalPopulation()
         {
             return totalPop;
+        }
+
+        public float GetLastCost()
+        {
+            return totalCost;
         }
 
         static int Test()

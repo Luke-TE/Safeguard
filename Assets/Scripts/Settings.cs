@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class Settings : MonoBehaviour
 {    
-    public static int _numOfCities = 5;
+    public static int _numOfCities;
     public static float _drugCostPP;
     public static float _vaccineCostPP;
 
-    private static float _diseaseCoeff = 0.5f;    
+    private static float _diseaseCoeff;    
     
     static Settings()
+    {
+        Init();
+    }
+
+    void Start()
+    {
+        Init();
+    }
+
+    private static void Init()
     {
         _numOfCities = 5;
         _drugCostPP = 5;

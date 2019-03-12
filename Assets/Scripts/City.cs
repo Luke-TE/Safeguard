@@ -7,11 +7,12 @@ namespace healthHack
 {
     public class City : MonoBehaviour
     {             
+        private static System.Random randomGenerator;        
+
         private int startPopulation;
         private int infectionLimit;
 
-        private IModelInterface model;
-        private static System.Random randomGenerator;        
+        private IModel model;
 
         void Start()
         {            
@@ -30,48 +31,39 @@ namespace healthHack
             model = new SIRModel(1000000, 0, 0.5f, 14, 7);
         }
 
-        public bool spreads(City city)
+        public bool IsDiseaseSpreading(City city)
         {
             double prob = randomGenerator.NextDouble();
-            if (this.model.GetInfectedPopulation() / this.model.GetTotalPopulation() > prob)
+            if (model.GetInfectedPopulation() / model.GetTotalPopulation() > prob)
             {
-                city.infectPopulation();
+                city.InfectPopulation();
                 return true;
             }
             return false;
-        }
+        }        
 
-        public void Update()
+        public void InfectPopulation()
         {
+            model.InfectPopulation(1);
         }
 
-        public void infectPopulation()
+        public void InfectPopulation(float amount)
         {
-            model.ExternalInfect(1);
+            model.InfectPopulation(amount);
         }
 
-        public void infectPopulation(float amount)
-        {
-            model.ExternalInfect(amount);
-        }
-
-        public void setVaccineLevel(float proportion)
+        public void SetProportionVaccinated(float proportion)
         {
             model.SetProportionVaccinated(proportion);
         }
-        public void setDrugTreatment(float proportion)
+        public void SetProportionTreated(float proportion)
         {
             model.SetProportionTreated(proportion);
         }
 
-        public IModelInterface getModel()
+        public IModel GetModel()
         {
-            return this.model;
-        }
-
- //       void OnMouseDown()
- //       {
- //          Debug.Log("City Clicked");
- //       }
+            return model;
+        } 
     }
 }

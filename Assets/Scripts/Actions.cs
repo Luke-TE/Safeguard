@@ -6,60 +6,44 @@ using System;
 
 namespace healthHack
 {
-
     public class Actions : MonoBehaviour
-    {
+    {        
+        private City currentCity;
 
-        public Text t;
-        string lastAction = "";
-        int percentage = 0;
-        private string name = "";
-        private bool clicked;
-        public Board board;
-        public Text percentageVac;
-        Transform cityChange;
+        public Text LastActionText;
+        public InputField PercentInput;
+        public Board Board;
+      
+        public void DoAction(string action)
+        {                   
+            currentCity = Board.CurrentCityTransform?.gameObject.GetComponent<City>();
 
-        public void setPercentage(int Percentage)
-        {
-            percentage = Percentage;
-        }
-
-        public void Action(string Action)
-        {
-            cityChange = board.currentCityTrans;
-            string val = percentageVac.text;
-            setPercentage(Int32.Parse(val));    
-            Complete_Action(Action);
-            name  = (cityChange.gameObject.GetComponent("City") as City).name;
-            clicked = true;
-        }
-
-        private void Update()
-        {
-            if (clicked)
+            if (currentCity != null)
             {
-                t.text = lastAction + ": " + (name + " by " + percentage + "%");
+                int.TryParse(PercentInput.text, out int percentage);                
+                percentage = Mathf.Clamp(percentage, 0, 100);
+                
+                SwitchAction(action, percentage);            
+                LastActionText.text = string.Format("{0}: {1} by {2}%.", action, currentCity.name, percentage);
             }
-        }
+        }        
 
-
-        public void Complete_Action(string currentAction)
-        {
-            lastAction = currentAction;
-            switch (currentAction)
+        private void SwitchAction(string action, int percentage = 0)
+        {                                   
+            switch (action)
             {
                 case "Delete Path":
                     break;
                 case "Vaccinate City":
-                    (cityChange.gameObject.GetComponent("City") as City).getModel().SetProportionVaccinated((float)percentage / 100);
-                    Debug.Log("Vaccinate");
+                    currentCity.GetModel().SetProportionVaccinated((float)percentage / 100);
                     break;
                 case "Isolate City":
                     break;
-                case "Introduce Drug Treatments":
-                    (cityChange.gameObject.GetComponent("City") as City).getModel().SetProportionTreated((float)percentage / 100);
+                case "Introduce Drug Treatment":
+                    currentCity.GetModel().SetProportionTreated((float)percentage / 100);
                     break;
-
+                default:
+                    throw new Exception("The action (" + action + ") is not supported");
             }
 
         }
