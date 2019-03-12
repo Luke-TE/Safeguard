@@ -41,7 +41,7 @@ namespace healthHack
 
         void Start()
         {
-            money = 10000000;
+            money = 100000000;
             income = 10000;
             gameStarted = false;
             random = new System.Random();

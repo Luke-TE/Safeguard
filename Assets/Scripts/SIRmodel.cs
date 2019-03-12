@@ -178,7 +178,7 @@ namespace healthHack
 
         public float GetLastCost()
         {
-            return totalCost;
+            return cost;
         }
 
         static int Test()
