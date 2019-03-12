@@ -13,6 +13,6 @@ You’re in control of the world’s health division: purchasing healthcare, arr
 -Improve vaccination and medication systems and how they interact with money  
 -Improve income system  
 -Implement lethal diseases and a loss mechanic when all population is dead  
--Implement happiness level and the effects of low happiness  
+-Implement happiness level and the effects of low happiness such as antivaxxers  
 -Improve UI  
 -Add content to settings screen
