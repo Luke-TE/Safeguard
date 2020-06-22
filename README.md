@@ -1,6 +1,6 @@
 # Safeguard
 ## In Progress
-A game that simulates the spread of disease across multiple cities and the effects of vaccinations.  
+A Unity simulation and game that demonstrates the effect of vaccines on a distributed population and simulates the spread of disease across multiple cities by calculating the probability of individual infection (using the SIR model of infection)  
 It was produced during Imperial College Health Hack 2019 by Vishwam Garg, Raghav Khanna, Jonathan Longman and Luke Texon.  
 It is programmed in Unity.  
 
